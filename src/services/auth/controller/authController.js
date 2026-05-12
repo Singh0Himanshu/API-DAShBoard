@@ -33,4 +33,15 @@ export class AuthController{
             next(error)
         }
     }
+    async register(req,res,next){
+        try {
+            const {username,email,password, role} = req.body;
+
+            const userData = {
+            username,email,password, role: role || APPLICATION_ROLES.CLIENT_VIEWER
+            }
+        } catch (error) {
+            
+        }
+    }
 }

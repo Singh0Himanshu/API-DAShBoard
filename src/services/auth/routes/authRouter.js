@@ -19,6 +19,14 @@ router.post("/onboard-super-admin",
     (req, res, next) => authController.onboardSuperAdmin(req, res, next)
 )
 
+router.post("/register",
+    requestLogger,
+    authenticate,
+    authorize([APPLICATION_ROLES.CLIENT_ADMIN]),
+    validate(registrationSchema),
+    (req,res,next) => authController.register(req,res,next)
+)
+
 
 
 export default router;
