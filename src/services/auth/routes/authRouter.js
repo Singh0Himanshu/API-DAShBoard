@@ -22,7 +22,7 @@ router.post("/onboard-super-admin",
 router.post("/register",
     requestLogger,
     authenticate,
-    authorize([APPLICATION_ROLES.CLIENT_ADMIN]),
+    authorize([APPLICATION_ROLES.SUPER_ADMIN]),
     validate(registrationSchema),
     (req,res,next) => authController.register(req,res,next)
 )

@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import ResponseFormatter from "../utils/responseFormatter.js";
 import config from "../config/index.js";
+import logger from "../config/logger.js";
 
 
 
@@ -8,10 +9,9 @@ import config from "../config/index.js";
     try {
         let token = null;
 
-        if(req.cookies && req.cookies.authToken){
-            token = req.cookies.authToken
+        if(req.cookies && req.cookies.SuperAdmin){
+            token = req.cookies.SuperAdmin
         }
-
         if(!token){
             return res.status(401).json(ResponseFormatter.error("Authentication token is Required", 401));
         }
