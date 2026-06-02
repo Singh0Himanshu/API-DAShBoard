@@ -2,6 +2,9 @@ import jwt from 'jsonwebtoken';
 import AppError from '../../../shared/utils/AppError.js';
 import config from '../../../shared/config/index.js';
 import logger from '../../../shared/config/logger.js';
+import { use } from 'react';
+import bcrypt from 'bcryptjs';
+import { APPLICATION_ROLES } from '../../../shared/constant/roles.js';
 
 export class AuthService{
     constructor(UserRepository){
@@ -41,6 +44,10 @@ export class AuthService{
 
         delete userObj.password;
         return userObj;
+    }
+
+    async comparePassword(userEnteredpassword, hashedPassword){
+        return await bcrypt.compare(userEnteredpassword,hashedPassword)
     }
 
     async onboardSuperAdmin(superAdmin){
@@ -95,6 +102,62 @@ export class AuthService{
         } catch (error) {
             logger.error("Error while registering user", error)
             throw error;
+        }
+    }
+
+    async login(username,password){
+        try {
+            const user = await this.UserRepository.findByUsername(username);
+
+            if(!user){
+                throw new AppError("invalid credential",401);
+            }
+
+            if(!user.isActive){
+                throw new AppError("Account is DeActivated",403)    ;
+            }
+
+            const isPasswordValid = await this.comparePassword(password, user.password)
+
+            if(!isPasswordValid){
+                throw new AppError("invalid credential",401);
+            }
+
+            const token = await this.generateToken(user)
+            logger.info("user logged successfully",{username: user.username})
+             return {
+                user: this.formatUserForResponse(user),
+                token
+             }
+        } catch (error) {
+            logger.error("Error in login service", error)
+            throw error
+        }
+    }
+
+    async getProfile(userId){
+        try {
+            const userdata = await this.UserRepository.findById(userId);
+            if(!userdata){
+                throw new AppError("user not found", 404)
+            }
+            
+            return this.formatUserForResponse(userdata);
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async checkSuperAdminPermissions(userId) {
+        try {
+            const user = await this.UserRepository.findById(userId);
+            if (!user) {
+                throw new AppError("User not found", 404);
+            }
+
+            return user.role === APPLICATION_ROLES.SUPER_ADMIN
+        } catch (error) {
+            console.log("checkSuperAdminPermissions error", error)
         }
     }
 }

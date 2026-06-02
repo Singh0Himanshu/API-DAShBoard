@@ -10,7 +10,11 @@ import rabbitmq from './shared/config/rabbitmq.js';
 import errorHandler from "./shared/middleware/errorHandler.js";
 import ResponseFormatter from "./shared/utils/responseFormatter.js";
 import { credentials } from "amqplib";
-import authRouter from "./services/auth/routes/authRouter.js"
+
+// All routes
+import authRouter from "./services/auth/routes/authRouter.js";
+import clientRouter from './services/client/routes/clientRoutes.js';
+import ingestRouter from './services/ingest/routes/ingestRoutes.js'
 
 /**
  * Initialise Express app
@@ -53,6 +57,7 @@ app.get('/health', (req,res) => {
         )
     );
 });
+
 app.get('/', (req,res)=>{
     res.status(200).json(
         ResponseFormatter.success(
@@ -68,8 +73,14 @@ app.get('/', (req,res)=>{
     )
 })
 
-// api/auth
-app.use("/api/auth", authRouter)
+// api for auth
+app.use("/api/auth", authRouter);
+
+// api for client
+app.use("/api", clientRouter);
+
+//Api for ingest
+app.use("/api/hit", ingestRouter);
 
 app.use((req,res) => {
     res.status(404).json(ResponseFormatter.error("Endpoint not found", 404));

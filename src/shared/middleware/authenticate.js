@@ -9,8 +9,8 @@ import logger from "../config/logger.js";
     try {
         let token = null;
 
-        if(req.cookies && req.cookies.SuperAdmin){
-            token = req.cookies.SuperAdmin
+        if(req.cookies && req.cookies.authToken){
+            token = req.cookies.authToken;
         }
         if(!token){
             return res.status(401).json(ResponseFormatter.error("Authentication token is Required", 401));

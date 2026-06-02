@@ -23,7 +23,7 @@ export class AuthController{
 
             const {token,user} =await this.authService.onboardSuperAdmin(superAdminData);
 
-            res.cookie("SuperAdmin",token,{
+            res.cookie("authToken",token,{
                 httpOnly: config.cookie.httpOnly,
                 // secure: config.cookie.secure,
                 // secure:false,
@@ -36,6 +36,7 @@ export class AuthController{
             next(error)
         }
     }
+
     async register(req,res,next){
         try {
             const {username,email,password, role} = req.body;
@@ -47,12 +48,52 @@ export class AuthController{
             const { token, user} = await this.authService.register(userData);
             console.log("This is Token for Admin",token)
             console.log("This is user info", user);
-            res.cookie("Admin",token,{
+            res.cookie("authToken",token,{
                 httpOnly: config.cookie.httpOnly,
                 // secure: config.cookie.secure,
                 expireIn: config.cookie.expiresIn
             })
             res.status(201).json(ResponseFormatter.success(user, "User registered Successfully", 201));
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async login(req,res,next){
+        try {
+            const {username, password} = req.body;
+
+            const {token,user} = await this.authService.login(username,password);
+
+            res.cookie("authToken",token,{
+                httpOnly: config.cookie.httpOnly,
+                // secure: config.cookie.secure,
+                // secure:false,
+                expireIn: config.cookie.expiresIn
+            })
+
+            res.status(200).json(ResponseFormatter.success(user,"user logedIn successfully", 200))
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async getProfile(req,res,next){
+        try {
+            const userId = req.user.userId;
+
+            const user = await this.authService.getProfile(userId);
+            res.status(200).json(ResponseFormatter.success(user, "User profile fetched successfully",200));
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async logoutUser(req,res,next){
+        try {
+            res.clearCookie("authToken");
+
+            return res.status(200).json(ResponseFormatter.success("","User loggedout successfully",200));
         } catch (error) {
             next(error)
         }
