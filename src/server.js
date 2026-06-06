@@ -14,7 +14,8 @@ import { credentials } from "amqplib";
 // All routes
 import authRouter from "./services/auth/routes/authRouter.js";
 import clientRouter from './services/client/routes/clientRoutes.js';
-import ingestRouter from './services/ingest/routes/ingestRoutes.js'
+import ingestRouter from './services/ingest/routes/ingestRoutes.js';
+import analyticsRouter from "./services/analytics/routes/analyticsRoutes.js";
 
 /**
  * Initialise Express app
@@ -81,6 +82,9 @@ app.use("/api", clientRouter);
 
 //Api for ingest
 app.use("/api/hit", ingestRouter);
+
+//analytics Routes
+app.use("/api/analytics",analyticsRouter);
 
 app.use((req,res) => {
     res.status(404).json(ResponseFormatter.error("Endpoint not found", 404));
