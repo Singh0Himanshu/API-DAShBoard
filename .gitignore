@@ -1,3 +1,6 @@
-node_modules
-logs
-.env
+dashboard/node_modules
+SERVER/node_modules
+SERVER/.env
+SERVER/logs
+backend/node_modules
+backend/.env
