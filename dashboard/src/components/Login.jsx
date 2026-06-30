@@ -19,8 +19,15 @@ function Login({ onLoginSuccess }) {
                 setError(data.message);
             }
         },
+        // onError: (error) => {
+        //     setError(error.response?.data?.message || 'Failed to connect to server');
+        // },
         onError: (error) => {
-            setError(error.response?.data?.message || 'Failed to connect to server');
+            console.log("Axios Error:", error);
+            console.log("Response:", error.response);
+            console.log("Response Data:", error.response?.data);
+
+            setError(error.response?.data?.message || "Failed to connect");
         },
     });
 
