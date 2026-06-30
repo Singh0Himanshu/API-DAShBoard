@@ -107,22 +107,24 @@ export class AuthService{
 
     async login(username,password){
         try {
+            console.log("1. Login started");
+            console.log("2. username", username);
             const user = await this.UserRepository.findByUsername(username);
-
+            console.log("3. Login user", user);
             if(!user){
                 throw new AppError("invalid credential",401);
             }
-
+            console.log("4. after user not found error code");
             if(!user.isActive){
                 throw new AppError("Account is DeActivated",403)    ;
             }
 
             const isPasswordValid = await this.comparePassword(password, user.password)
-
+            console.log("5. after password check", isPasswordValid);
             if(!isPasswordValid){
                 throw new AppError("invalid credential",401);
             }
-
+            console.log("6. password check passed");
             const token = await this.generateToken(user)
             logger.info("user logged successfully",{username: user.username})
              return {
