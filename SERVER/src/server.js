@@ -102,8 +102,8 @@ async function initializeConnection(){
         //Connect to MongoDB
         await mongodb.connect();
 
-        //Connect to RabbitMQ
-        // await rabbitmq.connect();
+        // Connect to RabbitMQ
+        await rabbitmq.connect();
 
         logger.info("All Connection established successfully");
     } catch (error) {
