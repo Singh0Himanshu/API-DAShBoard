@@ -15,12 +15,15 @@ const config = {
     },
 
     //postgreSQL
+    // postgres: {
+    //     host:process.env.PG_HOST || 'localhost',
+    //     port:parseInt(process.env.PG_PORT || '5432', 10),
+    //     database: process.env.PG_DATABASE || 'api_monitoring',
+    //     user: process.env.PG_USER || 'postgres',
+    //     password: process.env.PG_PASSWORD || 'postgres'
+    // },
     postgres: {
-        host:process.env.PG_HOST || 'localhost',
-        port:parseInt(process.env.PG_PORT || '5432', 10),
-        database: process.env.PG_DATABASE || 'api_monitoring',
-        user: process.env.PG_USER || 'postgres',
-        password: process.env.PG_PASSWORD || 'postgres'
+        databaseUrl: process.env.DATABASE_URL,
     },
 
     //RabbitMQ

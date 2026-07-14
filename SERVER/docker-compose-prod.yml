@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  api-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api-monitoring-app
+
+    env_file:
+      - .env
+
+    environment:
+      NODE_ENV: production
+
+    ports:
+      - "3000:3000"
+
+    volumes:
+      - ./logs:/app/logs
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+    networks:
+      - api-monitoring-network
+
+  consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile.consumer
+
+    container_name: api-monitoring-consumer
+
+    env_file:
+      - .env
+
+    environment:
+      NODE_ENV: production
+
+    volumes:
+      - ./logs:/app/logs
+
+    restart: unless-stopped
+
+    networks:
+      - api-monitoring-network
+
+networks:
+  api-monitoring-network:
+    driver: bridge
