@@ -65,17 +65,19 @@ export class AuthController{
 
             const {token,user} = await this.authService.login(username,password);
 
-            // res.cookie("authToken",token,{
-            //     httpOnly: config.cookie.httpOnly,
-            //     // secure: config.cookie.secure,
-            //     // secure:false,
-            //     expireIn: config.cookie.expiresIn
-            // })
+
+            // res.cookie("authToken", token, {
+            //     httpOnly: true,
+            //     secure: process.env.NODE_ENV === "production",
+            //     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            //     maxAge: config.cookie.expiresIn,
+            // });
+            const isHttps = process.env.USE_HTTPS === "true";
 
             res.cookie("authToken", token, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+                secure: isHttps,
+                sameSite: isHttps ? "none" : "lax",
                 maxAge: config.cookie.expiresIn,
             });
 
