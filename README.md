@@ -26,7 +26,7 @@ The application tracks API requests in real time, processes them asynchronously 
 
 ## Login
 
-![Login](./SERVER/)
+![Login](./dashboard/public/login.png)
 
 ---
 
